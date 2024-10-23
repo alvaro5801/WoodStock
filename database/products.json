@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "name": "n sei",
+        "description": "lorem ipsum"
+    },
+    {
+        "id": 2,
+        "name": "n sei 2",
+        "description": "lorem ipsum 2"
+    },
+    {
+        "id": 3,
+        "name": "Rolamento SKF",
+        "description": "Rolamento de esferas da marca SKF"
+    },
+    {
+        "id": 4,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    },
+    {
+        "id": 5,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    },
+    {
+        "id": 6,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    },
+    {
+        "id": 7,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    },
+    {
+        "id": 8,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    },
+    {
+        "id": 9,
+        "name": "Sei la 3",
+        "description": "Produto SKF"
+    }
+]
