@@ -1,19 +1,20 @@
 import json, os
-from product import Product
+from entities.product import Product
+from typing import List
 
 class ProductRepository:
     """
     Classe responsável por consultar e salvar produtos no banco de dados
     """
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Guarda todos os registros de produtos do banco de dados e o caminho para o banco de dados
         """
         self.path_name = os.path.dirname(__file__) + "\\database\\products.json"
         with open(self.path_name, 'r') as file:
-            self.products_dict = json.load(file)
+            self.products_list = json.load(file)
     
-    def find_by_id(self, id: int) -> dict:
+    def find_by_id(self, id: int) -> Product:
         """
         Retorna o produto com o id fornecido
 
@@ -21,31 +22,42 @@ class ProductRepository:
             id (int): id do produto
 
         Returns:
-            dict: dicionário contendo as informações do produto
+            Product: entidade de Produto contendo o objeto do respectivo produto
         """
-        for product in self.products_dict:
-            if (product['id'] == id):
-                return product
-            
-    def find_last(self) -> dict:
+        product_index = id -1
+        product = self.products_list[product_index]
+        product_entity = Product(product["name"], product["description"])
+        product_entity._Product__id = product["id"]
+        return product_entity
+        
+    def find_last(self) -> Product:
         """
         Encontra o último registro de produto (o mais novo)
 
         Returns:
-            dict: dicionário contendo as informações do produto
+            Product: entidade de Produto contendo o objeto do último produto registrado
         """
-        return self.products_dict[-1]
+        product = self.products_list[-1]
+        product_entity = Product(product["name"], product["description"])
+        product_entity._Product__id = product["id"]
+        return product_entity
 
-    def find_all(self) -> list:
+    def find_all(self) -> List[Product]:
         """
         Retorna todos os registros de produtos
 
         Returns:
-            list: Lista de dicionários contendo os produtos 
+            list: Lista de entidades dos produtos 
         """
-        return self.products_dict
+        all_product_entities = []
+        for product in self.products_list:
+            product_entity = Product(product["name"], product["description"])
+            product_entity._Product__id = product["id"]
+            all_product_entities.append(product_entity)
+        
+        return all_product_entities
     
-    def create(self, name, description):
+    def create(self, product: Product) -> True:
         """
         Cria um registro de produto no banco de dados
 
@@ -55,10 +67,10 @@ class ProductRepository:
         Returns:
             bool: True caso o produto tenha sido criado com sucesso
         """
-        last_id = self.find_last()["id"]
-        self.products_dict.append({"id": last_id + 1, "name": name, "description": description})
+        last_id = self.find_last().id
+        self.products_list.append({"id": last_id + 1, "name": product.name, "description": product.description})
         with open(self.path_name, "w") as file:
-            json.dump(self.products_dict, file, indent=4, ensure_ascii=False)
+            json.dump(self.products_list, file, indent=4, ensure_ascii=False)
         return True
 
 

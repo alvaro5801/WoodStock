@@ -43,5 +43,15 @@
         "id": 9,
         "name": "Sei la 3",
         "description": "Produto SKF"
+    },
+    {
+        "id": 10,
+        "name": "Cuscuz",
+        "description": "Flocos de milho cozidos no vapor"
+    },
+    {
+        "id": 11,
+        "name": "Cuscuz",
+        "description": "Flocos de milho cozidos no vapor"
     }
 ]
