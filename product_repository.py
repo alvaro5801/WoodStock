@@ -1,5 +1,6 @@
 import json, os
 from entities.product import Product
+from batch_repository import BatchRepository
 from typing import List
 
 class ProductRepository:
@@ -10,7 +11,7 @@ class ProductRepository:
         """
         Guarda todos os registros de produtos do banco de dados e o caminho para o banco de dados
         """
-        self.path_name = os.path.dirname(__file__) + "\\database\\products.json"
+        self.path_name = f"{os.path.dirname(__file__)}{os.sep}database{os.sep}products.json"
         with open(self.path_name, 'r') as file:
             self.products_list = json.load(file)
     
@@ -26,7 +27,8 @@ class ProductRepository:
         """
         product_index = id -1
         product = self.products_list[product_index]
-        product_entity = Product(product["name"], product["description"])
+        product_batches = BatchRepository().find_by_product_id(id)
+        product_entity = Product(product["name"], product["description"], [product_batches])
         product_entity._Product__id = product["id"]
         return product_entity
         
@@ -40,6 +42,7 @@ class ProductRepository:
         product = self.products_list[-1]
         product_entity = Product(product["name"], product["description"])
         product_entity._Product__id = product["id"]
+        product_entity.batches_list = BatchRepository().find_by_product_id(product_entity.id)
         return product_entity
 
     def find_all(self) -> List[Product]:
@@ -53,6 +56,7 @@ class ProductRepository:
         for product in self.products_list:
             product_entity = Product(product["name"], product["description"])
             product_entity._Product__id = product["id"]
+            product_entity.batches_list = BatchRepository().find_by_product_id(product_entity.id)
             all_product_entities.append(product_entity)
         
         return all_product_entities
@@ -67,8 +71,12 @@ class ProductRepository:
         Returns:
             bool: True caso o produto tenha sido criado com sucesso
         """
-        last_id = self.find_last().id
-        self.products_list.append({"id": last_id + 1, "name": product.name, "description": product.description})
+        current_product_id = self.find_last().id + 1 if self.products_list != [] else 1
+        self.products_list.append({"id": current_product_id, "name": product.name, "description": product.description})
+        batch_repository = BatchRepository()
+        for batch in product.batches_list:
+            batch._Batch__product_id = current_product_id
+            batch_repository.create(batch, current_product_id)
         with open(self.path_name, "w") as file:
             json.dump(self.products_list, file, indent=4, ensure_ascii=False)
         return True
